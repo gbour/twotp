@@ -80,6 +80,12 @@ class Binary(Term):
         return s
 
 
+    def to_python(self):
+        """
+        Returns as python value (str)
+        """
+        return self.value
+
 
 class BitBinary(Term):
     """
@@ -173,6 +179,11 @@ class Atom(Term):
         return hash((self.__class__, self.text))
 
 
+    def to_python(self):
+        """
+        Returns as python value (str)
+        """
+        return(self.text)
 
 def Tuple(val):
     """

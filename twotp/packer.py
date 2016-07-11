@@ -285,6 +285,18 @@ class Packer(ConstantHolder):
                 packetData += self.packOneTerm(item)
             return packetData + self.packChar(self.MAGIC_NIL)
 
+    def pack_map(self, term):
+        """
+        Pack a map.
+        """
+        length = len(term)
+        packetData = (self.packChar(self.MAGIC_MAP) + self.packInt(length))
+
+        for (key, value) in term.iteritems():
+            packetData += self.packOneTerm(key) + self.packOneTerm(value)
+
+        return packetData
+
 
     def packOneTerm(self, term):
         """

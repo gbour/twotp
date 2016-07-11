@@ -208,6 +208,35 @@ def Set(val):
     return set(val)
 
 
+class Map(Term):
+    def __init__(self, val):
+        self._val = val
+
+
+    def __len__(self):
+        return len(self._val)
+
+
+    def __eq__(self, other):
+        """
+        Check for equality of atom text.
+        """
+        if not isinstance(other, Map):
+            return False
+        return self._val == other._val
+
+
+    def __repr__(self):
+        """
+        Simple representation with the text.
+        """
+        s = "<%s at %s, values %s>" % (self.__class__.__name__,
+                                     hex(id(self)), self._val)
+        return s
+
+    def iteritems(self):
+        return self._val.iteritems()
+
 
 class Pid(Term):
     """
@@ -551,6 +580,7 @@ class ConstantHolder(object):
     MAGIC_BIT_BINARY = 77
     MAGIC_COMPRESSED = 80
     MAGIC_NEW_FLOAT = 70
+    MAGIC_MAP = 116
 
 
 

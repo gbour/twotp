@@ -6,7 +6,7 @@
 Twisted as an erlang node.
 """
 
-from twotp.term import Tuple, Atom, String
+from twotp.term import Tuple, Atom, String, Map
 from twotp.server import NodeServerFactory
 from twotp.client import NodeClientFactory
 from twotp.epmd import PersistentPortMapperFactory, OneShotPortMapperFactory

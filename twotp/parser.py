@@ -11,7 +11,7 @@ import zlib
 
 from twotp.term import Integer, List, Tuple, Float, Atom, Reference
 from twotp.term import Port, Pid, Binary, Fun, NewFun, Export, BitBinary
-from twotp.term import ConstantHolder, Dict, Set
+from twotp.term import ConstantHolder, Dict, Set, Map
 
 
 
@@ -115,6 +115,16 @@ class Parser(ConstantHolder):
             return List(elements), data
         else:
             return List(elements), data[1:]
+
+
+    def parse_map(self, data):
+        """
+        Parse a map.
+        """
+        arity = self.parseInt(data[:4])
+        elements, data = self._parse_seq(arity*2, data[4:]) # K1,V1,K2,V2, ...
+
+        return Map(dict([(elements[i], elements[i+1]) for i in range(0, len(elements), 2)])), data
 
 
     def _parse_seq(self, arity, data):

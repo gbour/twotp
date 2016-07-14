@@ -5,7 +5,7 @@
 Parser tests.
 """
 
-from twotp.term import Atom, Tuple, Pid, Reference, Integer, List
+from twotp.term import Atom, Tuple, Pid, Reference, Integer, List, Map
 from twotp.term import Float, Port, Binary, Fun, NewFun, Export, BitBinary
 from twotp.parser import Parser, RemainingDataError, UnhandledCode
 from twotp.test.util import TestCase
@@ -338,3 +338,28 @@ class ParseTestCase(TestCase):
         """
         self.assertEqual(
             self.parser.binaryToTerm('F?\xf3\xae\x14z\xe1G\xae'), (1.23, ""))
+
+
+    def test_parseEmptyMap(self):
+        """
+        Try to parse an empty map.
+        """
+        self.assertEqual(
+            self.parser.binaryToTerm("\x74\x00\x00\x00\x00"),
+            (Map({}), ""))
+
+
+    def test_parseMap(self):
+        """
+        Try to parse a map.
+        """
+        self.assertEqual(
+            self.parser.binaryToTerm(
+                "\x74\x00\x00\x00\x02"+ # map magic + len
+                "\x64\x00\x03foo"     + # 'foo' Atom (magic+len+content)
+                "\x6b\x00\x03bar"     + # 'bar' String (magic+len+content)
+                "\x61\x2a"            + # 42 int (magic+value)
+                "\x6d\x00\x00\x00\x04fish" # 'fish' binary ()
+            ),
+            (Map({Atom('foo'): List([98,97,114]), 42: Binary('fish')}), ""))
+

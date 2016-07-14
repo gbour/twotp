@@ -5,7 +5,7 @@
 Packer tests.
 """
 
-from twotp.term import Atom, Tuple, Pid, Reference, List, NewFloat, Binary
+from twotp.term import Atom, Tuple, Pid, Reference, List, NewFloat, Binary, Map
 from twotp.packer import Packer, UnhandledClass
 from twotp.test.util import TestCase
 
@@ -322,3 +322,27 @@ class PackTestCase(TestCase):
         """
         self.assertEqual(
             self.packer.packOneTerm(NewFloat(1.234)), "F?\xf3\xbev\xc8\xb49X")
+
+
+    def test_packEmptyMap(self):
+        """
+        Test packing empty map
+        """
+        m = Map({})
+        self.assertEqual(
+            self.packer.packOneTerm(m),
+            "\x74\x00\x00\x00\x00" # map magic + len
+        )
+
+
+    def test_packMap(self):
+        """
+        Test primary support for maps.
+        """
+        m = Map({Atom("foo") : 42})
+        self.assertEqual(
+            self.packer.packOneTerm(m),
+            "\x74\x00\x00\x00\x01"+ # map magic + len
+            "\x64\x00\x03foo"     + # 'foo' Atom (magic+len+content)
+            "\x61\x2a"              # 42 int (magic+value)
+        )

@@ -285,6 +285,7 @@ class Packer(ConstantHolder):
                 packetData += self.packOneTerm(item)
             return packetData + self.packChar(self.MAGIC_NIL)
 
+
     def pack_map(self, term):
         """
         Pack a map.
